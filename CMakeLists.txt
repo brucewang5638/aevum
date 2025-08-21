@@ -51,7 +51,7 @@ qt_add_resources(WorkstationWellnessElf "resources"
 target_link_libraries(WorkstationWellnessElf PRIVATE Qt6::Core Qt6::Widgets Qt6::Network)
 
 if(WIN32)
-    target_link_libraries(WorkstationWellnessElf PRIVATE user32)
+    target_link_libraries(WorkstationWellnessElf PRIVATE user32 Winmm Pdh)
 elseif(UNIX AND NOT APPLE)
     target_link_libraries(WorkstationWellnessElf PRIVATE X11 Xss)
 endif()
