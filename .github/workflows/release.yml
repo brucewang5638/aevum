@@ -36,7 +36,7 @@ jobs:
           # The windeployqt tool is in the Qt bin directory, which the setup action adds to the PATH.
           # It copies all necessary Qt DLLs next to the executable.
           # The executable will be in build/Release/ for a Release build on Windows.
-          windeployqt.exe .\build\Release\WorkstationWellnessElf.exe
+          windeployqt.exe ./build/Release/WorkstationWellnessElf.exe
         shell: bash
 
       - name: Create ZIP archive
