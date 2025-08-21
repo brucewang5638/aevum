@@ -1,0 +1,55 @@
+
+# GitHub Actions workflow for building and releasing the C++ Qt application for Windows
+
+name: Release Windows App
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-package-windows:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.5.0'
+          arch: 'win64_msvc2019_64'
+
+      - name: Configure project with CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+        shell: bash
+
+      - name: Build project with CMake
+        run: |
+          cmake --build build --config Release
+        shell: bash
+
+      - name: Deploy dependencies with windeployqt
+        run: |
+          # The windeployqt tool is in the Qt bin directory, which the setup action adds to the PATH.
+          # It copies all necessary Qt DLLs next to the executable.
+          # The executable will be in build/Release/ for a Release build on Windows.
+          windeployqt.exe .\build\Release\WorkstationWellnessElf.exe
+        shell: bash
+
+      - name: Create ZIP archive
+        run: |
+          # We will zip the entire Release folder which now contains the .exe and all .dlls
+          powershell -Command "Compress-Archive -Path .\build\Release\* -DestinationPath WorkstationWellnessElf-Windows.zip"
+        shell: powershell
+
+      - name: Upload ZIP to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: WorkstationWellnessElf-Windows.zip
+          asset_name: WorkstationWellnessElf-Windows-x86_64.zip
+          tag: ${{ github.ref }}
+          overwrite: true
