@@ -384,7 +384,7 @@ QString SystemUtils::getWindowsActiveWindow()
 int SystemUtils::getWindowsIdleTime()
 {
     LASTINPUTINFO lii;
-    lii.cbSize = sizeof(LASTINPUTIIFNFO);
+    lii.cbSize = sizeof(LASTINPUTINFO);
     GetLastInputInfo(&lii);
     return GetTickCount() - lii.dwTime;
 }
