@@ -3,6 +3,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QRect>
+#include <QPoint>
 
 /**
  * @brief 系统工具类
