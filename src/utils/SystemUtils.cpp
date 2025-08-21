@@ -323,10 +323,10 @@ QString SystemUtils::getAppDataPath()
 bool SystemUtils::isNetworkAvailable()
 {
     QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
-    for (const QNetworkInterface& interface : interfaces) {
-        if (interface.flags().testFlag(QNetworkInterface::IsUp) &&
-            interface.flags().testFlag(QNetworkInterface::IsRunning) &&
-            !interface.flags().testFlag(QNetworkInterface::IsLoopBack)) {
+    for (const QNetworkInterface& iface : interfaces) {
+        if (iface.flags().testFlag(QNetworkInterface::IsUp) &&
+            iface.flags().testFlag(QNetworkInterface::IsRunning) &&
+            !iface.flags().testFlag(QNetworkInterface::IsLoopBack)) {
             return true;
         }
     }
