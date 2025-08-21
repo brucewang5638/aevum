@@ -33,8 +33,7 @@ jobs:
 
       - name: Deploy dependencies with windeployqt
         run: |
-          cd build/Release
-          windeployqt.exe WorkstationWellnessElf.exe
+          windeployqt.exe build/Release/WorkstationWellnessElf.exe
         shell: bash
 
       - name: Create ZIP archive
