@@ -1,5 +1,6 @@
 #include "utils/SystemUtils.h"
 #include "utils/Logger.h"
+#include <QSettings>
 #include <QApplication>
 #include <QScreen>
 #include <QGuiApplication>
