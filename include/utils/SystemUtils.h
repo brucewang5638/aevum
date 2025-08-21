@@ -103,14 +103,11 @@ public:
 private:
     SystemUtils() = delete; // 工具类，禁止实例化
 
-#ifdef Q_OS_WIN
+    // Platform-specific implementations
     static QString getWindowsActiveWindow();
     static int getWindowsIdleTime();
-#elif defined(Q_OS_LINUX)
     static QString getLinuxActiveWindow();
     static int getLinuxIdleTime();
-#elif defined(Q_OS_MACOS)
     static QString getMacActiveWindow();
     static int getMacIdleTime();
-#endif
 };

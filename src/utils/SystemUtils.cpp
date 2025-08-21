@@ -349,10 +349,26 @@ void SystemUtils::showNativeNotification(const QString& title,
                                         const QString& message,
                                         int duration)
 {
-    // Temporarily commented out for debugging
+#ifdef Q_OS_WIN
+    // Windows 原生通知
+    // 这里可以使用 Windows Toast 通知API
+    Q_UNUSED(title)
+    Q_UNUSED(message)
+    Q_UNUSED(duration)
+#elif defined(Q_OS_LINUX)
+    // Linux 使用 notify-send
+    QStringList args;
+    args << "-t" << QString::number(duration) << title << message;
+    QProcess::startDetached("notify-send", args);
+#else
+    Q_UNUSED(title)
+    Q_UNUSED(message)
+    Q_UNUSED(duration)
+#endif
 }
 
 // 平台特定实现
+
 #ifdef Q_OS_WIN
 QString SystemUtils::getWindowsActiveWindow()
 {
@@ -368,13 +384,19 @@ QString SystemUtils::getWindowsActiveWindow()
 int SystemUtils::getWindowsIdleTime()
 {
     LASTINPUTINFO lii;
-    lii.cbSize = sizeof(LASTINPUTINFO);
+    lii.cbSize = sizeof(LASTINPUTIIFNFO);
     GetLastInputInfo(&lii);
     return GetTickCount() - lii.dwTime;
 }
-#endif
 
-#ifdef Q_OS_LINUX
+// Stubs for other platforms
+QString SystemUtils::getLinuxActiveWindow() { return QString(); }
+int SystemUtils::getLinuxIdleTime() { return 0; }
+QString SystemUtils::getMacActiveWindow() { return QString(); }
+int SystemUtils::getMacIdleTime() { return 0; }
+
+#elif defined(Q_OS_LINUX)
+
 QString SystemUtils::getLinuxActiveWindow()
 {
     Display* display = XOpenDisplay(nullptr);
@@ -420,9 +442,15 @@ int SystemUtils::getLinuxIdleTime()
     
     return idleTime;
 }
-#endif
 
-#ifdef Q_OS_MACOS
+// Stubs for other platforms
+QString SystemUtils::getWindowsActiveWindow() { return QString(); }
+int SystemUtils::getWindowsIdleTime() { return 0; }
+QString SystemUtils::getMacActiveWindow() { return QString(); }
+int SystemUtils::getMacIdleTime() { return 0; }
+
+#elif defined(Q_OS_MACOS)
+
 QString SystemUtils::getMacActiveWindow()
 {
     // macOS 实现
@@ -434,4 +462,20 @@ int SystemUtils::getMacIdleTime()
     // macOS 实现
     return 0;
 }
+
+// Stubs for other platforms
+QString SystemUtils::getWindowsActiveWindow() { return QString(); }
+int SystemUtils::getWindowsIdleTime() { return 0; }
+QString SystemUtils::getLinuxActiveWindow() { return QString(); }
+int SystemUtils::getLinuxIdleTime() { return 0; }
+
+#else // Fallback for other platforms
+
+QString SystemUtils::getWindowsActiveWindow() { return QString(); }
+int SystemUtils::getWindowsIdleTime() { return 0; }
+QString SystemUtils::getLinuxActiveWindow() { return QString(); }
+int SystemUtils::getLinuxIdleTime() { return 0; }
+QString SystemUtils::getMacActiveWindow() { return QString(); }
+int SystemUtils::getMacIdleTime() { return 0; }
+
 #endif
