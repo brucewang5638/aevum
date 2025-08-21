@@ -349,22 +349,7 @@ void SystemUtils::showNativeNotification(const QString& title,
                                         const QString& message,
                                         int duration)
 {
-#ifdef Q_OS_WIN
-    // Windows 原生通知
-    // 这里可以使用 Windows Toast 通知API
-    Q_UNUSED(title)
-    Q_UNUSED(message)
-    Q_UNUSED(duration)
-#elif defined(Q_OS_LINUX)
-    // Linux 使用 notify-send
-    QStringList args;
-    args << "-t" << QString::number(duration) << title << message;
-    QProcess::startDetached("notify-send", args);
-#else
-    Q_UNUSED(title)
-    Q_UNUSED(message)
-    Q_UNUSED(duration)
-#endif
+    // Temporarily commented out for debugging
 }
 
 // 平台特定实现
