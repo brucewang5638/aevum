@@ -2,7 +2,7 @@
 #include <QSystemTrayIcon>
 #include <QMessageBox>
 #include <QTimer>
-#include <QDir> // Added for QDir::currentPath()
+#include <iostream> // Added for std::cerr
 
 #include "ui/SystemTrayIcon.h"
 #include "core/ActivityMonitor.h"
@@ -14,17 +14,10 @@
 
 int main(int argc, char *argv[])
 {
-    // --- VERY EARLY LOGGING SETUP ---
-    // Set a fixed log file path before QApplication is constructed
-    // This ensures logs are written even if QApplication fails to initialize fully
-    Logger::setLogFile(QDir::currentPath() + "/aevum_debug.log");
-    // --- END VERY EARLY LOGGING SETUP ---
+    std::cerr << "DEBUG: Point 1 - main() entry" << std::endl;
 
     QApplication app(argc, argv);
-
-    // Initialize Logger after QApplication is available for full features
-    Logger::initialize();
-    Logger::info("Application started (early log).");
+    std::cerr << "DEBUG: Point 2 - QApplication constructed" << std::endl;
 
     // 设置应用程序信息
     app.setApplicationName("工位健康精灵");
@@ -32,20 +25,26 @@ int main(int argc, char *argv[])
     app.setApplicationVersion("1.0.0");
     app.setOrganizationName("WorkstationWellness");
     app.setOrganizationDomain("workstationwellness.com");
+    std::cerr << "DEBUG: Point 3 - Application info set" << std::endl;
 
     // 检查系统托盘是否可用
+    std::cerr << "DEBUG: Point 4 - Checking system tray availability" << std::endl;
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
+        std::cerr << "DEBUG: Point 5 - System tray not available" << std::endl;
         QMessageBox::critical(nullptr, "工位健康精灵",
                              "系统托盘不可用，程序无法正常运行。");
         return -1;
     }
+    std::cerr << "DEBUG: Point 6 - System tray available" << std::endl;
 
     // 设置应用程序不在关闭最后一个窗口时退出
     QApplication::setQuitOnLastWindowClosed(false);
+    std::cerr << "DEBUG: Point 7 - Quit on last window closed set" << std::endl;
 
-    // Original Logger::initialize() and info() calls are now replaced/moved
-    // Logger::initialize();
-    // Logger::info("工位健康精灵启动中...");
+    // 初始化日志系统
+    Logger::initialize();
+    Logger::info("工位健康精灵启动中...");
+    std::cerr << "DEBUG: Point 8 - Logger initialized" << std::endl;
 
     // 初始化配置管理器
     ConfigManager configManager;
