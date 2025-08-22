@@ -38,7 +38,7 @@ set(HEADERS
 
 include_directories(include)
 
-add_executable(WorkstationWellnessElf WIN32 ${SOURCES} ${HEADERS})
+add_executable(WorkstationWellnessElf ${SOURCES} ${HEADERS})
 
 qt_add_resources(WorkstationWellnessElf "resources"
     PREFIX "/"

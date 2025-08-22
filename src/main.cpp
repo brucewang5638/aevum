@@ -2,6 +2,7 @@
 #include <QSystemTrayIcon>
 #include <QMessageBox>
 #include <QTimer>
+#include <QDir> // Added for QDir::currentPath()
 
 #include "ui/SystemTrayIcon.h"
 #include "core/ActivityMonitor.h"
@@ -13,7 +14,17 @@
 
 int main(int argc, char *argv[])
 {
+    // --- VERY EARLY LOGGING SETUP ---
+    // Set a fixed log file path before QApplication is constructed
+    // This ensures logs are written even if QApplication fails to initialize fully
+    Logger::setLogFile(QDir::currentPath() + "/aevum_debug.log");
+    // --- END VERY EARLY LOGGING SETUP ---
+
     QApplication app(argc, argv);
+
+    // Initialize Logger after QApplication is available for full features
+    Logger::initialize();
+    Logger::info("Application started (early log).");
 
     // 设置应用程序信息
     app.setApplicationName("工位健康精灵");
@@ -32,9 +43,9 @@ int main(int argc, char *argv[])
     // 设置应用程序不在关闭最后一个窗口时退出
     QApplication::setQuitOnLastWindowClosed(false);
 
-    // 初始化日志系统
-    Logger::initialize();
-    Logger::info("工位健康精灵启动中...");
+    // Original Logger::initialize() and info() calls are now replaced/moved
+    // Logger::initialize();
+    // Logger::info("工位健康精灵启动中...");
 
     // 初始化配置管理器
     ConfigManager configManager;
